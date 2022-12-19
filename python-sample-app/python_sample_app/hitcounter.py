@@ -1,7 +1,8 @@
 from constructs import Construct
 from aws_cdk import (
     aws_lambda as _lambda,
-    aws_dynamodb as ddb
+    aws_dynamodb as ddb,
+    RemovalPolicy
 )
 
 
@@ -23,7 +24,8 @@ class HitCounter(Construct):
             self, 'Hits',
             # https://beabetterdev.com/2022/02/07/dynamodb-partition-key-vs-sort-key/
             # TLDR: partition key is like a primary key for dynamodb and is required
-            partition_key={'name': 'path', 'type': ddb.AttributeType.STRING}
+            partition_key={'name': 'path', 'type': ddb.AttributeType.STRING},
+            removal_policy=RemovalPolicy.DESTROY
         )
 
         self._handler = _lambda.Function(

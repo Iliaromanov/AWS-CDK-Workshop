@@ -7,6 +7,8 @@ from aws_cdk import (
 
 from .hitcounter import HitCounter
 
+from cdk_dynamo_table_view import TableViewer
+
 class PythonSampleAppStack(Stack):
     def __init__(self, scope: Construct, construct_id: str, **kwargs) -> None:
         super().__init__(scope, construct_id, **kwargs)
@@ -26,4 +28,10 @@ class PythonSampleAppStack(Stack):
         apigw.LambdaRestApi(
             self, "Endpoint",
             handler=hello_with_hitcounter.handler
+        )
+
+        TableViewer(
+            self, 'ViewHitCounter',
+            title='Hello Hits',
+            table=hello_with_hitcounter.table
         )

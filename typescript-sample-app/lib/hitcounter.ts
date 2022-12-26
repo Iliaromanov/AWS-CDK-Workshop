@@ -22,7 +22,7 @@ export class HitCounter extends Construct {
         });
 
         this.handler = new lambda.Function(
-            this, 'HitCountHandler', {
+            this, 'HitCounterHandler', {
                 runtime: lambda.Runtime.NODEJS_14_X,
                 code: lambda.Code.fromAsset('lambda'),
                 handler: 'hitcounter.handler',
@@ -32,5 +32,11 @@ export class HitCounter extends Construct {
                 }
             }
         );
+
+        // must give lambda read/write permissions to db table
+        table.grantReadWriteData(this.handler);
+
+        // must give hitcounter lambda permissions to invoke downstream lambda
+        props.downstream.grantInvoke(this.handler);
     }
 }

@@ -1,7 +1,9 @@
-import { Duration, Stack, StackProps } from 'aws-cdk-lib';
+import { Stack, StackProps } from 'aws-cdk-lib';
 import * as lambda from 'aws-cdk-lib/aws-lambda';
 import * as apigw from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
+
+import { HitCounter } from './hitcounter';
 
 export class TypescriptSampleAppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -14,6 +16,16 @@ export class TypescriptSampleAppStack extends Stack {
       handler: 'hello.handler'
     });
 
-    const api = new apigw.LambdaRestApi(this, 'Endpoint', { handler: hello });
+    const helloWithCounter = new HitCounter(
+      this, 'HitCounter', {
+        downstream: hello
+      }
+    );
+    
+    // Defines API Gateway REST API resource backed by our "hello" func
+    new apigw.LambdaRestApi(this, 'Endpoint', {
+      handler: helloWithCounter.handler
+    });
+
   }
 }

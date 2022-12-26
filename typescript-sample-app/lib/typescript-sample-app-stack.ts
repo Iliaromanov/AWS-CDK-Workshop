@@ -4,6 +4,7 @@ import * as apigw from 'aws-cdk-lib/aws-apigateway';
 import { Construct } from 'constructs';
 
 import { HitCounter } from './hitcounter';
+import { TableViewer } from 'cdk-dynamo-table-viewer';
 
 export class TypescriptSampleAppStack extends Stack {
   constructor(scope: Construct, id: string, props?: StackProps) {
@@ -26,6 +27,11 @@ export class TypescriptSampleAppStack extends Stack {
     new apigw.LambdaRestApi(this, 'Endpoint', {
       handler: helloWithCounter.handler
     });
+
+    new TableViewer(this, 'ViewHitConstruct', {
+      title: 'Hello Hits',
+      table: helloWithCounter.table
+    })
 
   }
 }

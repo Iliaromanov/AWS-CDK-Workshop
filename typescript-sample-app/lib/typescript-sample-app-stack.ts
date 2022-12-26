@@ -13,5 +13,7 @@ export class TypescriptSampleAppStack extends Stack {
       code: lambda.Code.fromAsset('lambda'),
       handler: 'hello.handler'
     });
+
+    const api = new apigw.LambdaRestApi(this, 'Endpoint', { handler: hello });
   }
 }
